@@ -1,7 +1,33 @@
+"use client";
+
 import Link from 'next/link'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function Home() {
+  const [nelaPosts, setNelaPosts] = useState(0)
+  const [szogunPosts, setSzogunPosts] = useState(0)
+
+  useEffect(() => {
+    async function loadCounts() {
+      const { count: nelaCount } = await supabase
+          .from('posts')
+          .select('*', { count: 'exact', head: true })
+          .eq('dog', 'nela')
+
+      const { count: szogunCount } = await supabase
+          .from('posts')
+          .select('*', { count: 'exact', head: true })
+          .eq('dog', 'szogun')
+
+      setNelaPosts(nelaCount ?? 0)
+      setSzogunPosts(szogunCount ?? 0)
+    }
+
+    void loadCounts()
+  }, [])
+
   return (
       <main>
         {/* NAV */}
@@ -57,7 +83,7 @@ export default function Home() {
                 <div className="card-breed">☀️ The professional napper</div>
                 <div className="card-stats">
                   <div className="cstat">
-                    <span className="cstat-num">0</span>
+                    <span className="cstat-num">{nelaPosts}</span>
                     <span className="cstat-lbl">Posts</span>
                   </div>
                   <div className="cstat">
@@ -70,12 +96,12 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="card-vibe vibe-yellow">
-                  "Lazy indoors. Rocket outdoors. 0 to 40mph in 2 seconds."
+                  &quot;Lazy indoors. Rocket outdoors. 0 to 40mph in 2 seconds.&quot;
                 </div>
                 <div className="card-desc">
                   Spends 22 hours horizontal. The other 2? Pure greyhound terror.
                 </div>
-                <div className="card-cta cta-yellow">Visit Nela's page ☀️</div>
+                <div className="card-cta cta-yellow">Visit Nela&apos;s page ☀️</div>
               </div>
             </Link>
 
@@ -99,7 +125,7 @@ export default function Home() {
                 <div className="card-breed">⚡ The chaos gremlin</div>
                 <div className="card-stats">
                   <div className="cstat">
-                    <span className="cstat-num">0</span>
+                    <span className="cstat-num">{szogunPosts}</span>
                     <span className="cstat-lbl">Posts</span>
                   </div>
                   <div className="cstat">
@@ -112,12 +138,12 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="card-vibe vibe-green">
-                  "Anxious. Energetic. Unstoppable. Beard game unmatched."
+                  &quot;Anxious. Energetic. Unstoppable. Beard game unmatched.&quot;
                 </div>
                 <div className="card-desc">
-                  Active, anxious, and running on pure chaos energy. Szogun doesn't walk — he bounces.
+                  Active, anxious, and running on pure chaos energy. Szogun doesn&apos;t walk — he bounces.
                 </div>
-                <div className="card-cta cta-green">Visit Szogun's page ⚡</div>
+                <div className="card-cta cta-green">Visit Szogun&apos;s page ⚡</div>
               </div>
             </Link>
 
@@ -126,7 +152,7 @@ export default function Home() {
 
         {/* FOOTER */}
         <footer className="site-footer">
-          Made with 🐾 love · Paws & Tales
+          Made with 🐾 love · Paws &amp; Tales
         </footer>
       </main>
   )
