@@ -1,65 +1,133 @@
-import Image from "next/image";
+import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+      <main>
+        {/* NAV */}
+        <nav className="nav">
+          <div className="nav-brand">
+            Paws<span className="text-green">.</span><span className="text-yellow">.</span>
+          </div>
+        </nav>
+
+        {/* HERO BANNER */}
+        <div className="hero-banner">
+          <span className="paw p1">🐾</span>
+          <span className="paw p2">🐾</span>
+          <span className="paw p3">🐾</span>
+          <span className="paw p4">🐾</span>
+          <span className="paw p5">🐾</span>
+          <span className="paw p6">🐾</span>
+          <span className="paw p7">🐾</span>
+          <span className="paw p8">🐾</span>
+          <span className="paw p9">🐾</span>
+          <span className="paw p10">🐾</span>
+          <span className="paw p11">🐾</span>
+          <h1>
+            Meet <span className="text-yellow-dark">Nela</span>
+            <br />
+            <em>& <span className="text-green-dark">Szogun</span></em>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+          <p>Two dogs. Zero chill. Pick your pup 🐾</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* CARDS */}
+        <section className="cards-section">
+          <p className="section-label">Choose a dog</p>
+          <div className="cards-row">
+
+            {/* NELA */}
+            <Link href="/dogs/nela" className="dog-card nela-card">
+              <div className="card-photo-wrap">
+                <Image
+                    src="/photos/nela/nela-zgredek.jpg"
+                    alt="Nela"
+                    width={360}
+                    height={260}
+                    className="card-real-img"
+                />
+              </div>
+              <div className="colour-strip strip-yellow" />
+              <div className="card-body">
+                <div className="card-top">
+                  <div className="card-name">Nela</div>
+                  <div className="cbadge cbadge-yellow">Lurcher</div>
+                </div>
+                <div className="card-breed">☀️ The professional napper</div>
+                <div className="card-stats">
+                  <div className="cstat">
+                    <span className="cstat-num">0</span>
+                    <span className="cstat-lbl">Posts</span>
+                  </div>
+                  <div className="cstat">
+                    <span className="cstat-num">😴</span>
+                    <span className="cstat-lbl">Mood</span>
+                  </div>
+                  <div className="cstat">
+                    <span className="cstat-num">💛</span>
+                    <span className="cstat-lbl">Energy</span>
+                  </div>
+                </div>
+                <div className="card-vibe vibe-yellow">
+                  "Lazy indoors. Rocket outdoors. 0 to 40mph in 2 seconds."
+                </div>
+                <div className="card-desc">
+                  Spends 22 hours horizontal. The other 2? Pure greyhound terror.
+                </div>
+                <div className="card-cta cta-yellow">Visit Nela's page ☀️</div>
+              </div>
+            </Link>
+
+            {/* SZOGUN */}
+            <Link href="/dogs/szogun" className="dog-card szogun-card">
+              <div className="card-photo-wrap">
+                <Image
+                    src="/photos/szogun/szogun-cow.jpg"
+                    alt="Szogun"
+                    width={360}
+                    height={260}
+                    className="card-real-img"
+                />
+              </div>
+              <div className="colour-strip strip-green" />
+              <div className="card-body">
+                <div className="card-top">
+                  <div className="card-name">Szogun</div>
+                  <div className="cbadge cbadge-green">Schnauzer Mix</div>
+                </div>
+                <div className="card-breed">⚡ The chaos gremlin</div>
+                <div className="card-stats">
+                  <div className="cstat">
+                    <span className="cstat-num">0</span>
+                    <span className="cstat-lbl">Posts</span>
+                  </div>
+                  <div className="cstat">
+                    <span className="cstat-num">😤</span>
+                    <span className="cstat-lbl">Mood</span>
+                  </div>
+                  <div className="cstat">
+                    <span className="cstat-num">💚</span>
+                    <span className="cstat-lbl">Energy</span>
+                  </div>
+                </div>
+                <div className="card-vibe vibe-green">
+                  "Anxious. Energetic. Unstoppable. Beard game unmatched."
+                </div>
+                <div className="card-desc">
+                  Active, anxious, and running on pure chaos energy. Szogun doesn't walk — he bounces.
+                </div>
+                <div className="card-cta cta-green">Visit Szogun's page ⚡</div>
+              </div>
+            </Link>
+
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="site-footer">
+          Made with 🐾 love · Paws & Tales
+        </footer>
       </main>
-    </div>
-  );
+  )
 }
