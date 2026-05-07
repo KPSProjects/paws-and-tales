@@ -38,7 +38,7 @@ export default function SzogunPage() {
             setPosts(loaded);
         }
 
-        loadPosts();
+        void loadPosts();
     }, []);
 
     function handleNewPost(post: MediaPost) {
@@ -51,7 +51,6 @@ export default function SzogunPage() {
 
     return (
         <main>
-            {/* NAV */}
             <nav className="nav">
                 <Link href="/" className="nav-brand">
                     Paws<span className="text-green">.</span><span className="text-yellow">.</span>
@@ -60,10 +59,17 @@ export default function SzogunPage() {
                     <Link href="/" className="nav-back">← Home</Link>
                     <Link href="/dogs/nela" className="nav-dog-btn btn-yellow">☀️ Nela</Link>
                     <Link href="/dogs/szogun" className="nav-dog-btn active-green">⚡ Szogun</Link>
+                    {isAdmin && (
+                        <button
+                            className="nav-logout-btn"
+                            onClick={async () => { await supabase.auth.signOut(); }}
+                        >
+                            Log out
+                        </button>
+                    )}
                 </div>
             </nav>
 
-            {/* HERO */}
             <div className="dog-hero hero-green">
                 <div className="hero-glow-g" />
                 <div className="hero-stripe-green" />
@@ -77,7 +83,6 @@ export default function SzogunPage() {
                 </div>
             </div>
 
-            {/* TOOLBAR */}
             <div className="toolbar toolbar-dark">
                 {isAdmin && (
                     <button className="upload-btn ubtn-green" onClick={() => setModalOpen(true)}>
@@ -89,12 +94,11 @@ export default function SzogunPage() {
                 </div>
             </div>
 
-            {/* GALLERY OR EMPTY STATE */}
             {posts.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-icon">🐾</div>
                     <h4>No posts yet!</h4>
-                    <p>Hit "Add post" to share Szogun's first moment.</p>
+                    <p>Hit &quot;Add post&quot; to share Szogun&apos;s first moment.</p>
                 </div>
             ) : (
                 <div className="dog-szogun">
@@ -107,7 +111,6 @@ export default function SzogunPage() {
                 </div>
             )}
 
-            {/* MODAL */}
             {modalOpen && (
                 <UploadModal
                     dog="szogun"

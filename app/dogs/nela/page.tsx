@@ -38,7 +38,7 @@ export default function NelaPage() {
             setPosts(loaded);
         }
 
-        loadPosts();
+        void loadPosts();
     }, []);
 
     function handleNewPost(post: MediaPost) {
@@ -51,7 +51,6 @@ export default function NelaPage() {
 
     return (
         <main>
-            {/* NAV */}
             <nav className="nav">
                 <Link href="/" className="nav-brand">
                     Paws<span className="text-green">.</span><span className="text-yellow">.</span>
@@ -60,10 +59,17 @@ export default function NelaPage() {
                     <Link href="/" className="nav-back">← Home</Link>
                     <Link href="/dogs/nela" className="nav-dog-btn active-yellow">☀️ Nela</Link>
                     <Link href="/dogs/szogun" className="nav-dog-btn btn-green">⚡ Szogun</Link>
+                    {isAdmin && (
+                        <button
+                            className="nav-logout-btn"
+                            onClick={async () => { await supabase.auth.signOut(); }}
+                        >
+                            Log out
+                        </button>
+                    )}
                 </div>
             </nav>
 
-            {/* HERO */}
             <div className="dog-hero hero-yellow">
                 <div className="hero-glow-y" />
                 <div className="hero-stripe-yellow" />
@@ -72,12 +78,11 @@ export default function NelaPage() {
                     <div className="dh-breed">Lurcher · The professional napper</div>
                     <div className="dh-bio">
                         Spends 22 hours horizontal. The other 2? Pure greyhound terror.
-                        0 to 40mph before you've finished your coffee.
+                        0 to 40mph before you&apos;ve finished your coffee.
                     </div>
                 </div>
             </div>
 
-            {/* TOOLBAR */}
             <div className="toolbar toolbar-dark">
                 {isAdmin && (
                     <button className="upload-btn ubtn-yellow" onClick={() => setModalOpen(true)}>
@@ -89,12 +94,11 @@ export default function NelaPage() {
                 </div>
             </div>
 
-            {/* GALLERY OR EMPTY STATE */}
             {posts.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-icon">🐾</div>
                     <h4>No posts yet!</h4>
-                    <p>Hit "Add post" to share Nela's first moment.</p>
+                    <p>Hit &quot;Add post&quot; to share Nela&apos;s first moment.</p>
                 </div>
             ) : (
                 <div className="dog-nela">
@@ -107,7 +111,6 @@ export default function NelaPage() {
                 </div>
             )}
 
-            {/* MODAL */}
             {modalOpen && (
                 <UploadModal
                     dog="nela"
