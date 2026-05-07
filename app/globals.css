@@ -1285,3 +1285,31 @@ h1, h2, h3 {
   background: rgba(255, 0, 0, 0.15);
   border-color: #ff6b6b;
 }
+.post-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(255, 0, 0, 0.15);
+  color: rgba(255, 80, 80, 0.5);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.post-delete-btn:hover {
+  background: rgba(255, 0, 0, 0.08);
+  color: #ff4d4d;
+}
+
+.post-delete-btn.confirming {
+  color: #ff4d4d;
+  background: rgba(255, 0, 0, 0.1);
+  border-top-color: rgba(255, 0, 0, 0.3);
+}
