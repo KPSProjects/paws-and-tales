@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
@@ -10,6 +10,24 @@ export default function AdminPage() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        async function checkSession() {
+            const { data: sessionData } = await supabase.auth.getSession();
+            const user = sessionData.session?.user;
+            if (user) {
+                const { data: profile } = await supabase
+                    .from("profiles")
+                    .select("role")
+                    .eq("id", user.id)
+                    .single();
+                if (profile?.role === "admin") {
+                    router.push("/admin/users");
+                }
+            }
+        }
+        void checkSession();
+    }, [router]);
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
@@ -27,11 +45,11 @@ export default function AdminPage() {
             return;
         }
 
-        router.push("/");
+        router.push("/admin/users");
     }
 
     return (
-        <main className="admin-page">
+        <main className="admin-page admin-page-body">
             <div className="admin-box">
                 <h1 className="admin-title">🐾 Admin Login</h1>
                 <p className="admin-sub">Only the owner can post here.</p>

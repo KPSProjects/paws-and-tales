@@ -6,12 +6,13 @@ import { MediaPost, MediaType } from "@/types/media";
 import { supabase } from "@/lib/supabase";
 
 interface Props {
-    dog: "nela" | "szogun";
+    dog: string;
+    dogId?: string;
     onClose: () => void;
     onSubmit: (post: MediaPost) => void;
 }
 
-export default function UploadModal({ dog, onClose, onSubmit }: Props) {
+export default function UploadModal({ dog, dogId, onClose, onSubmit }: Props) {
     const [caption, setCaption] = useState("");
     const [preview, setPreview] = useState<string | null>(null);
     const [mediaType, setMediaType] = useState<MediaType>("image");
@@ -35,6 +36,7 @@ export default function UploadModal({ dog, onClose, onSubmit }: Props) {
         if (!file || !preview) return;
         setUploading(true);
 
+        // 1. Upload file to Supabase Storage
         const fileExt = file.name.split(".").pop();
         const fileName = `${dog}/${crypto.randomUUID()}.${fileExt}`;
 
@@ -48,16 +50,26 @@ export default function UploadModal({ dog, onClose, onSubmit }: Props) {
             return;
         }
 
+        // 2. Get the public URL
         const { data: urlData } = supabase.storage
             .from("post-media")
             .getPublicUrl(fileName);
 
         const publicUrl = urlData.publicUrl;
 
+        // 3. Get current user
+        const { data: sessionData } = await supabase.auth.getSession();
+        const userId = sessionData.session?.user?.id;
+        console.log("User ID:", userId); // DEBUG
+        console.log("Dog ID:", dogId); // DEBUG
+
+        // 4. Save post to database
         const { data, error } = await supabase
             .from("posts")
             .insert({
                 dog,
+                dog_id: dogId ?? null,
+                owner_id: userId ?? null,
                 media_type: mediaType,
                 url: publicUrl,
                 caption,
@@ -92,7 +104,7 @@ export default function UploadModal({ dog, onClose, onSubmit }: Props) {
             >
                 <button className="modal-close" onClick={onClose}>x</button>
                 <h2 className="modal-title">
-                    New Post for {dog === "nela" ? "Nela" : "Szogun"}
+                    New Post for {dog === "nela" ? "Nela" : dog === "szogun" ? "Szogun" : dog}
                 </h2>
 
                 <div className="modal-upload-area" onClick={() => fileRef.current?.click()}>

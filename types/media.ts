@@ -4,9 +4,9 @@ export type MediaType = "image" | "gif" | "video";
 
 export interface MediaPost {
     id: string;
-    dog: "nela" | "szogun";
+    dog: string;
     mediaType: MediaType;
-    url: string;        // temporary local blob URL from the file picker
+    url: string;
     caption: string;
-    createdAt: string;  // ISO date string
+    createdAt: string;
 }

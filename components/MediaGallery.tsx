@@ -7,7 +7,7 @@ import PostCard from "@/components/PostCard";
 
 interface Props {
     posts: MediaPost[];
-    dog: "nela" | "szogun";
+    dog: string;
     isAdmin: boolean;
     onDelete: (id: string) => void;
 }
