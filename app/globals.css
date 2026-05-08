@@ -1601,3 +1601,58 @@ h1, h2, h3 {
   opacity: 0.4;
   cursor: not-allowed;
 }
+/* ── LIGHTBOX ── */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(10, 20, 6, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: overlay-in 0.2s ease forwards;
+}
+
+.lightbox-content {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  animation: modal-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--mid);
+  background: var(--dark);
+  color: var(--muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.lightbox-close:hover {
+  background: var(--mid);
+  color: white;
+}
+.grid-click-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  cursor: pointer;
+  border-radius: 16px;
+}

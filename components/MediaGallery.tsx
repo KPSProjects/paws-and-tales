@@ -15,9 +15,10 @@ interface Props {
 export default function MediaGallery({ posts, dog, isAdmin, onDelete }: Props) {
     const [view, setView] = useState<"grid" | "slideshow">("grid");
     const [slideIndex, setSlideIndex] = useState(0);
+    const [lightboxPost, setLightboxPost] = useState<MediaPost | null>(null);
 
     if (posts.length === 0) {
-        return <p className="gallery-empty">No posts yet. Add the first one! 🐾</p>;
+        return <p className="gallery-empty">No posts yet. Add the first one!</p>;
     }
 
     return (
@@ -43,13 +44,21 @@ export default function MediaGallery({ posts, dog, isAdmin, onDelete }: Props) {
             {view === "grid" && (
                 <div className="gallery-grid">
                     {posts.map((post) => (
-                        <PostCard
+                        <div
                             key={post.id}
-                            post={post}
-                            dog={dog}
-                            isAdmin={isAdmin}
-                            onDelete={onDelete}
-                        />
+                            style={{ position: "relative" }}
+                        >
+                            <PostCard
+                                post={post}
+                                dog={dog}
+                                isAdmin={isAdmin}
+                                onDelete={onDelete}
+                            />
+                            <div
+                                className="grid-click-overlay"
+                                onClick={() => setLightboxPost(post)}
+                            />
+                        </div>
                     ))}
                 </div>
             )}
@@ -81,6 +90,35 @@ export default function MediaGallery({ posts, dog, isAdmin, onDelete }: Props) {
                     </button>
 
                     <p className="slide-counter">{slideIndex + 1} / {posts.length}</p>
+                </div>
+            )}
+
+            {/* Lightbox */}
+            {lightboxPost && (
+                <div
+                    className="lightbox-overlay"
+                    onClick={() => setLightboxPost(null)}
+                >
+                    <div
+                        className="lightbox-content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="lightbox-close"
+                            onClick={() => setLightboxPost(null)}
+                        >
+                            ✕
+                        </button>
+                        <PostCard
+                            post={lightboxPost}
+                            dog={dog}
+                            isAdmin={isAdmin}
+                            onDelete={(id) => {
+                                onDelete(id);
+                                setLightboxPost(null);
+                            }}
+                        />
+                    </div>
                 </div>
             )}
         </div>
