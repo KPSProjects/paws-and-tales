@@ -1,33 +1,28 @@
-# 🐾 Paws & Tales
+# Paws & Tales
 
-A personal dog blog built with Next.js 15, TypeScript, and Supabase.
-Follow the adventures of **Nela** ☀️ the Lurcher and **Szogun** ⚡ the Schnauzer Mix.
+A community dog blog platform built with Next.js 15, TypeScript, and Supabase.
+Share your dog's adventures, follow other dogs, and connect with fellow dog lovers.
 
----
-
-## ✨ Features
-
-- 📸 Upload photos, GIFs, and videos for each dog
-- 🗃️ Posts saved permanently to Supabase database
-- ☁️ Media files stored in Supabase Storage
-- 🔒 Admin-only upload and delete (via Supabase Auth)
-- 🖼️ Grid and slideshow gallery views
-- 📱 Fully responsive on mobile
-- 🎨 Custom CSS with neon green & yellow theme
+**Live site:** [paws-and-tales.vercel.app](https://paws-and-tales.vercel.app)
 
 ---
 
-## 🐕 The Dogs
+## Features
 
-| | Nela ☀️ | Szogun ⚡ |
-|---|---|---|
-| **Breed** | Lurcher | Schnauzer Mix |
-| **Vibe** | Professional napper | Chaos gremlin |
-| **Colour** | Neon Yellow `#FFE600` | Neon Green `#39FF14` |
+- Upload photos, GIFs, and videos for your dog
+- Posts saved permanently to Supabase database
+- Media files stored in Supabase Storage
+- Multi-user system with signup and admin approval flow
+- Role-based admin system — manage users, dogs and posts
+- Follow other dogs and track them in your dashboard
+- Like posts and leave comments with usernames
+- Grid and slideshow gallery views
+- Fully responsive on mobile
+- Custom CSS with neon green & yellow theme
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework** — Next.js 15 (App Router)
 - **Language** — TypeScript
@@ -39,7 +34,7 @@ Follow the adventures of **Nela** ☀️ the Lurcher and **Szogun** ⚡ the Schn
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repo
 
@@ -61,6 +56,7 @@ Create a `.env.local` file in the root:
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_publishable_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ```
 
 ### 4. Run the development server
@@ -73,52 +69,116 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🗄️ Database Setup
+## Database Setup
 
-Create a `posts` table in Supabase with these columns:
+### Tables required in Supabase:
 
+**`profiles`** — User accounts
 | Column | Type | Notes |
 |---|---|---|
-| `id` | `uuid` | Primary key, `gen_random_uuid()` |
-| `dog` | `text` | `"nela"` or `"szogun"` |
-| `media_type` | `text` | `"image"`, `"gif"`, or `"video"` |
+| `id` | `uuid` | Matches Supabase Auth user ID |
+| `email` | `text` | User email |
+| `username` | `text` | Unique username |
+| `status` | `text` | `pending`, `approved`, `rejected` |
+| `role` | `text` | `admin` or null |
+| `created_at` | `timestamptz` | Default `now()` |
+
+**`dogs`** — Dog profiles
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `owner_id` | `uuid` | References auth user |
+| `name` | `text` | Dog's name |
+| `breed` | `text` | Dog's breed |
+| `bio` | `text` | Dog's bio |
+| `slug` | `text` | URL-friendly name |
+| `colour` | `text` | Hex colour code |
+| `photo_url` | `text` | Profile photo URL |
+| `created_at` | `timestamptz` | Default `now()` |
+
+**`posts`** — Media posts
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `dog_id` | `uuid` | References dogs table |
+| `owner_id` | `uuid` | References auth user |
+| `media_type` | `text` | `image`, `gif`, or `video` |
 | `url` | `text` | Public URL from Supabase Storage |
 | `caption` | `text` | Nullable |
 | `created_at` | `timestamptz` | Default `now()` |
 
+**`likes`** — Post likes
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `post_id` | `uuid` | References posts |
+| `user_id` | `uuid` | References auth user |
+| `created_at` | `timestamptz` | Default `now()` |
+
+**`comments`** — Post comments
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `post_id` | `uuid` | References posts |
+| `user_id` | `uuid` | References auth user |
+| `content` | `text` | Comment text |
+| `created_at` | `timestamptz` | Default `now()` |
+
+**`follows`** — Dog follows
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary key |
+| `dog_id` | `uuid` | References dogs |
+| `user_id` | `uuid` | References auth user |
+| `created_at` | `timestamptz` | Default `now()` |
+
 ---
 
-## 🔐 Admin Access
+## Access & Roles
 
-The admin panel is available at `/admin`. Only the owner can log in to upload or delete posts. Visitors see a read-only view of the blog.
+| Role | Access |
+|---|---|
+| Visitor | View all dogs and posts |
+| Approved user | Add dogs, post media, like, comment, follow |
+| Admin | Full control — manage users, dogs and posts at `/admin` |
+
+New users must be approved by the admin before they can post.
+Admin role is assigned manually in the `profiles` table by setting `role = 'admin'`.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── app/
-│   ├── page.tsx              # Homepage
+│   ├── page.tsx                    # Homepage
 │   ├── admin/
-│   │   └── page.tsx          # Admin login
-│   └── dogs/
-│       ├── nela/
-│       │   └── page.tsx      # Nela's page
-│       └── szogun/
-│           └── page.tsx      # Szogun's page
+│   │   ├── page.tsx                # Admin login
+│   │   └── users/page.tsx          # Admin panel
+│   ├── api/
+│   │   └── delete-user/route.ts    # Auth user deletion API
+│   ├── dashboard/
+│   │   ├── page.tsx                # User dashboard
+│   │   ├── add-dog/page.tsx        # Add dog form
+│   │   └── edit-dog/[id]/page.tsx  # Edit dog form
+│   ├── dogs/
+│   │   └── [slug]/page.tsx         # Dynamic dog page
+│   ├── login/page.tsx              # Login page
+│   ├── signup/page.tsx             # Signup page
+│   └── pending/page.tsx            # Awaiting approval page
 ├── components/
-│   ├── MediaGallery.tsx      # Grid + slideshow gallery
-│   ├── PostCard.tsx          # Individual post card
-│   └── UploadModal.tsx       # Upload modal
+│   ├── MediaGallery.tsx            # Grid + slideshow gallery
+│   ├── PostCard.tsx                # Post card with likes & comments
+│   └── UploadModal.tsx             # Media upload modal
 ├── lib/
-│   ├── supabase.ts           # Supabase client
-│   └── useAdmin.ts           # Auth hook
+│   ├── supabase.ts                 # Supabase client
+│   └── useAdmin.ts                 # Auth & role hook
 ├── types/
-│   └── media.ts              # TypeScript types
+│   └── media.ts                    # TypeScript types
 └── public/
-    └── photos/               # Static dog photos
+    └── photos/                     # Static photos & icons
 ```
 
 ---
 
-*Made with ❤️ for Nela & Szogun 🐾*
+Made with love for Nela & Szogun · [paws-and-tales.vercel.app](https://paws-and-tales.vercel.app)
